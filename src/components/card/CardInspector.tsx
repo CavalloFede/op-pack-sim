@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useCallback, useRef, useState } from "react";
 import type { Card } from "@/lib/types";
 import { CardDisplay } from "./CardDisplay";
 import { RarityBadge } from "@/components/ui/RarityBadge";
@@ -12,6 +11,8 @@ interface CardInspectorProps {
   currentIndex: number;
   onClose: () => void;
   onNavigate: (index: number) => void;
+  /** Ref to the grid container so we can find source card positions */
+  gridRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export function CardInspector({
@@ -19,15 +20,98 @@ export function CardInspector({
   currentIndex,
   onClose,
   onNavigate,
+  gridRef,
 }: CardInspectorProps) {
-  const closeRef = useRef<HTMLButtonElement>(null);
-  const prevRef = useRef<HTMLButtonElement>(null);
-  const nextRef = useRef<HTMLButtonElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [originRect, setOriginRect] = useState<DOMRect | null>(null);
+  const [isAnimatingIn, setIsAnimatingIn] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [firstPop, setFirstPop] = useState(true);
 
   const isOpen = cards.length > 0 && currentIndex >= 0;
   const card = isOpen ? cards[currentIndex] : null;
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < cards.length - 1;
+
+  // Capture source card rect when opening
+  useEffect(() => {
+    if (!isOpen) {
+      setIsVisible(false);
+      setOriginRect(null);
+      setFirstPop(true);
+      return;
+    }
+
+    // Find the source card element in the grid
+    const gridEl = gridRef?.current;
+    if (gridEl) {
+      const slots = gridEl.querySelectorAll("[data-card-slot]");
+      const sourceEl = slots[currentIndex] as HTMLElement | undefined;
+      if (sourceEl) {
+        setOriginRect(sourceEl.getBoundingClientRect());
+      }
+    }
+
+    setIsAnimatingIn(true);
+    // Small delay to let the origin position render, then animate to center
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setIsVisible(true);
+        setIsAnimatingIn(false);
+      });
+    });
+  }, [isOpen, currentIndex, gridRef]);
+
+  // Calculate transform to position card at center
+  const getCardStyle = (): React.CSSProperties => {
+    if (!isOpen) return {};
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // Target: card centered, scaled to fit viewport
+    const maxW = Math.min(vw * 0.7, 340);
+    const maxH = vh * 0.55;
+    const cardAspect = 63 / 88;
+    let targetW = maxW;
+    let targetH = targetW / cardAspect;
+    if (targetH > maxH) {
+      targetH = maxH;
+      targetW = targetH * cardAspect;
+    }
+
+    if (isAnimatingIn && originRect) {
+      // Start at the source card's position
+      return {
+        position: "fixed",
+        left: originRect.left,
+        top: originRect.top,
+        width: originRect.width,
+        height: originRect.height,
+        zIndex: 1000,
+        transition: "none",
+      };
+    }
+
+    return {
+      position: "fixed",
+      left: (vw - targetW) / 2,
+      top: (vh - targetH) / 2 - 40,
+      width: targetW,
+      height: targetH,
+      zIndex: 1000,
+      transition: "all 0.45s cubic-bezier(0.22, 0.61, 0.36, 1)",
+      transform: firstPop && isVisible ? "rotateY(360deg)" : "rotateY(0deg)",
+    };
+  };
+
+  // Mark first pop as done after animation
+  useEffect(() => {
+    if (isVisible && firstPop) {
+      const timer = setTimeout(() => setFirstPop(false), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, firstPop]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -47,32 +131,6 @@ export function CardInspector({
         onNavigate(currentIndex + 1);
         return;
       }
-
-      if (e.key === "Tab") {
-        e.preventDefault();
-        const focusable = [closeRef, prevRef, nextRef]
-          .filter((ref) => ref.current && !ref.current.hidden)
-          .map((ref) => ref.current!);
-
-        if (focusable.length === 0) return;
-
-        const active = document.activeElement;
-        const currentFocusIndex = focusable.indexOf(active as HTMLButtonElement);
-
-        let nextIndex: number;
-        if (e.shiftKey) {
-          nextIndex =
-            currentFocusIndex <= 0
-              ? focusable.length - 1
-              : currentFocusIndex - 1;
-        } else {
-          nextIndex =
-            currentFocusIndex >= focusable.length - 1
-              ? 0
-              : currentFocusIndex + 1;
-        }
-        focusable[nextIndex].focus();
-      }
     },
     [isOpen, onClose, hasPrev, hasNext, currentIndex, onNavigate]
   );
@@ -81,7 +139,6 @@ export function CardInspector({
     if (isOpen) {
       document.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
-      closeRef.current?.focus();
     }
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
@@ -89,90 +146,74 @@ export function CardInspector({
     };
   }, [isOpen, handleKeyDown]);
 
+  if (!card) return null;
+
   return (
-    <AnimatePresence>
-      {card && (
-        <motion.div
-          className={styles.overlay}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          role="dialog"
-          aria-label={`Inspecting ${card.name}`}
-          aria-modal="true"
-        >
-          <motion.div
-            className={styles.content}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ type: "spring", damping: 20, stiffness: 200 }}
-            onClick={(e) => e.stopPropagation()}
+    <>
+      {/* Backdrop */}
+      <div
+        className={`${styles.backdrop} ${isVisible ? styles.backdropVisible : ""}`}
+        onClick={onClose}
+      />
+
+      {/* Card flying to center */}
+      <div
+        ref={cardRef}
+        className={styles.flyingCard}
+        style={getCardStyle()}
+      >
+        <CardDisplay card={card} enableHolo />
+      </div>
+
+      {/* Meta info + nav (fades in after card arrives) */}
+      <div
+        className={`${styles.controls} ${isVisible ? styles.controlsVisible : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {hasPrev && (
+          <button
+            className={`${styles.navButton} ${styles.navLeft}`}
+            onClick={() => onNavigate(currentIndex - 1)}
+            aria-label="Previous card"
           >
-            <button
-              ref={closeRef}
-              className={styles.close}
-              onClick={onClose}
-              aria-label="Close inspector"
-            >
-              ✕
-            </button>
+            ‹
+          </button>
+        )}
 
-            <div className={styles.nav}>
-              {hasPrev && (
-                <button
-                  ref={prevRef}
-                  className={`${styles.navButton} ${styles.navLeft}`}
-                  onClick={() => onNavigate(currentIndex - 1)}
-                  aria-label="Previous card"
-                >
-                  ‹
-                </button>
-              )}
+        {hasNext && (
+          <button
+            className={`${styles.navButton} ${styles.navRight}`}
+            onClick={() => onNavigate(currentIndex + 1)}
+            aria-label="Next card"
+          >
+            ›
+          </button>
+        )}
 
-              <div className={styles.cardArea}>
-                <CardDisplay card={card} enableHolo />
-              </div>
+        <button
+          className={styles.close}
+          onClick={onClose}
+          aria-label="Close inspector"
+        >
+          ✕
+        </button>
 
-              {hasNext && (
-                <button
-                  ref={nextRef}
-                  className={`${styles.navButton} ${styles.navRight}`}
-                  onClick={() => onNavigate(currentIndex + 1)}
-                  aria-label="Next card"
-                >
-                  ›
-                </button>
-              )}
-            </div>
-
-            <div className={styles.meta}>
-              <h2 className={styles.name}>{card.name}</h2>
-              <div className={styles.details}>
-                <RarityBadge rarity={card.rarity} />
-                <span className={styles.detail}>{card.cardNumber}</span>
-                <span className={styles.detail}>{card.set}</span>
-                {card.color && (
-                  <span className={styles.detail}>{card.color}</span>
-                )}
-                {card.type && (
-                  <span className={styles.detail}>{card.type}</span>
-                )}
-                {card.cost && (
-                  <span className={styles.detail}>Cost: {card.cost}</span>
-                )}
-                {card.power && (
-                  <span className={styles.detail}>Power: {card.power}</span>
-                )}
-              </div>
-              <span className={styles.counter}>
-                {currentIndex + 1} / {cards.length}
-              </span>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        <div className={styles.meta}>
+          <h2 className={styles.name}>{card.name}</h2>
+          <div className={styles.details}>
+            <RarityBadge rarity={card.rarity} />
+            <span className={styles.detail}>{card.cardNumber}</span>
+            <span className={styles.detail}>{card.set}</span>
+            {card.color && <span className={styles.detail}>{card.color}</span>}
+            {card.type && <span className={styles.detail}>{card.type}</span>}
+            {card.cost && <span className={styles.detail}>Cost: {card.cost}</span>}
+            {card.power && <span className={styles.detail}>Power: {card.power}</span>}
+          </div>
+          <span className={styles.counter}>
+            {currentIndex + 1} / {cards.length}
+          </span>
+        </div>
+      </div>
+    </>
   );
 }

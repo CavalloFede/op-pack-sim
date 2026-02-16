@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import type { Card } from "@/lib/types";
 import { HoloTier, Rarity } from "@/lib/types";
@@ -25,19 +25,20 @@ export function CardReveal({
 }: CardRevealProps) {
   const [inspectedIndex, setInspectedIndex] = useState(-1);
   const [announcement, setAnnouncement] = useState("");
+  const gridRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
       <div aria-live="polite" className={styles.srOnly}>
         {announcement}
       </div>
-      <div className={styles.grid}>
+      <div className={styles.grid} ref={gridRef}>
         {cards.map((card, i) => {
           const isRevealed = revealedIndices.has(i);
           const isSpecial = card.holoTier !== HoloTier.None;
 
           return (
-            <div key={`${card.id}-${i}`} className={styles.cardSlot}>
+            <div key={`${card.id}-${i}`} className={styles.cardSlot} data-card-slot>
               <div
                 className={`${styles.flipContainer} ${isRevealed ? styles.flipped : ""}`}
                 onClick={() => {
@@ -112,6 +113,7 @@ export function CardReveal({
         currentIndex={inspectedIndex}
         onClose={() => setInspectedIndex(-1)}
         onNavigate={setInspectedIndex}
+        gridRef={gridRef}
       />
     </>
   );

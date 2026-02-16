@@ -1,120 +1,145 @@
-.overlay {
+/* ── Backdrop ── */
+.backdrop {
   position: fixed;
   inset: 0;
-  z-index: 100;
-  background: rgba(0, 0, 0, 0.80);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(0px);
+  transition: all 0.35s ease;
+  pointer-events: none;
 }
 
-.content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  max-width: 360px;
-  width: 100%;
+.backdropVisible {
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  pointer-events: auto;
 }
 
+/* ── Flying card ── */
+.flyingCard {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+/* ── Controls layer ── */
+.controls {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.15s;
+}
+
+.controlsVisible {
+  opacity: 1;
+}
+
+/* ── Close button ── */
 .close {
   position: absolute;
-  top: -40px;
-  right: 0;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--border);
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  background: var(--bg-secondary);
+  background: rgba(0, 0, 0, 0.4);
   color: var(--text-secondary);
   font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  pointer-events: auto;
   transition: all var(--transition-fast);
 }
 
 .close:hover {
   color: var(--text-primary);
-  border-color: var(--border-hover);
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.6);
 }
 
-.nav {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
+/* ── Nav arrows ── */
 .navButton {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--border);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.4);
   color: var(--text-secondary);
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  pointer-events: auto;
   transition: all var(--transition-fast);
-  z-index: 1;
 }
 
 .navButton:hover {
   background: rgba(0, 0, 0, 0.6);
   color: var(--text-primary);
-  border-color: var(--border-hover);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .navLeft {
-  left: -56px;
+  left: 12px;
 }
 
 .navRight {
-  right: -56px;
+  right: 12px;
 }
 
-.cardArea {
-  width: 100%;
-  max-width: 300px;
+@media (min-width: 768px) {
+  .navLeft {
+    left: 24px;
+  }
+  .navRight {
+    right: 24px;
+  }
 }
 
+/* ── Meta info ── */
 .meta {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
+  pointer-events: auto;
 }
 
 .name {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 700;
+  color: var(--text-primary);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .details {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .detail {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
   padding: 2px 8px;
-  background: var(--bg-secondary);
+  background: rgba(0, 0, 0, 0.4);
   border-radius: 4px;
 }
 
 .counter {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }

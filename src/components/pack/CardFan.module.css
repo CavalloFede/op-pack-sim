@@ -17,5 +17,5 @@
   aspect-ratio: var(--card-aspect);
   border-radius: var(--radius-card);
   overflow: hidden;
+  will-change: transform, opacity;
 }
-

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import type { PackResult, PackState } from "@/lib/types";
 import { Rarity } from "@/lib/types";
 import { RarityBadge } from "@/components/ui/RarityBadge";
+import { useLang } from "@/lib/langContext";
 import { PackEnvelope } from "./PackEnvelope";
 import { CardFan } from "./CardFan";
 import { CardReveal } from "./CardReveal";
@@ -19,6 +20,15 @@ interface PackWrapperProps {
 export function PackWrapper({ pack, onOpenAnother }: PackWrapperProps) {
   const [state, setState] = useState<PackState>("sealed");
   const [revealedIndices, setRevealedIndices] = useState<Set<number>>(new Set());
+  const { getImageUrl } = useLang();
+
+  // Preload all card images as soon as the pack is generated
+  useEffect(() => {
+    pack.cards.forEach((card) => {
+      const img = new window.Image();
+      img.src = getImageUrl(card.imageUrl);
+    });
+  }, [pack, getImageUrl]);
 
   const handleTear = useCallback(() => {
     setState("tearing");

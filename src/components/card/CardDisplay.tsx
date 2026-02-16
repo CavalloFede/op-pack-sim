@@ -39,7 +39,7 @@ export function CardDisplay({ card, onClick, enableHolo = true }: CardDisplayPro
             alt={card.name}
             className={`${styles.image} ${loaded ? styles.loaded : ""}`}
             onLoad={() => setLoaded(true)}
-            loading="lazy"
+            loading="eager"
           />
         </div>
         {hasHolo && (

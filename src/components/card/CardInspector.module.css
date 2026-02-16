@@ -43,6 +43,45 @@
   border-color: var(--border-hover);
 }
 
+.nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.navButton {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 1;
+}
+
+.navButton:hover {
+  background: rgba(0, 0, 0, 0.75);
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
+.navLeft {
+  left: -56px;
+}
+
+.navRight {
+  right: -56px;
+}
+
 .cardArea {
   width: 100%;
   max-width: 300px;
@@ -73,4 +112,9 @@
   padding: 2px 8px;
   background: var(--bg-secondary);
   border-radius: 4px;
+}
+
+.counter {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }

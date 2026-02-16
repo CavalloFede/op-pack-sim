@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Card } from "@/lib/types";
 import { CardDisplay } from "./CardDisplay";
@@ -8,28 +8,86 @@ import { RarityBadge } from "@/components/ui/RarityBadge";
 import styles from "./CardInspector.module.css";
 
 interface CardInspectorProps {
-  card: Card | null;
+  cards: Card[];
+  currentIndex: number;
   onClose: () => void;
+  onNavigate: (index: number) => void;
 }
 
-export function CardInspector({ card, onClose }: CardInspectorProps) {
+export function CardInspector({
+  cards,
+  currentIndex,
+  onClose,
+  onNavigate,
+}: CardInspectorProps) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
+
+  const isOpen = cards.length > 0 && currentIndex >= 0;
+  const card = isOpen ? cards[currentIndex] : null;
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < cards.length - 1;
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (!isOpen) return;
+
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      if (e.key === "ArrowLeft" && hasPrev) {
+        onNavigate(currentIndex - 1);
+        return;
+      }
+
+      if (e.key === "ArrowRight" && hasNext) {
+        onNavigate(currentIndex + 1);
+        return;
+      }
+
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const focusable = [closeRef, prevRef, nextRef]
+          .filter((ref) => ref.current && !ref.current.hidden)
+          .map((ref) => ref.current!);
+
+        if (focusable.length === 0) return;
+
+        const active = document.activeElement;
+        const currentFocusIndex = focusable.indexOf(active as HTMLButtonElement);
+
+        let nextIndex: number;
+        if (e.shiftKey) {
+          nextIndex =
+            currentFocusIndex <= 0
+              ? focusable.length - 1
+              : currentFocusIndex - 1;
+        } else {
+          nextIndex =
+            currentFocusIndex >= focusable.length - 1
+              ? 0
+              : currentFocusIndex + 1;
+        }
+        focusable[nextIndex].focus();
+      }
     },
-    [onClose]
+    [isOpen, onClose, hasPrev, hasNext, currentIndex, onNavigate]
   );
 
   useEffect(() => {
-    if (card) {
+    if (isOpen) {
       document.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
+      closeRef.current?.focus();
     }
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";
     };
-  }, [card, handleKeyDown]);
+  }, [isOpen, handleKeyDown]);
 
   return (
     <AnimatePresence>
@@ -53,6 +111,7 @@ export function CardInspector({ card, onClose }: CardInspectorProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <button
+              ref={closeRef}
               className={styles.close}
               onClick={onClose}
               aria-label="Close inspector"
@@ -60,8 +119,32 @@ export function CardInspector({ card, onClose }: CardInspectorProps) {
               ✕
             </button>
 
-            <div className={styles.cardArea}>
-              <CardDisplay card={card} enableHolo />
+            <div className={styles.nav}>
+              {hasPrev && (
+                <button
+                  ref={prevRef}
+                  className={`${styles.navButton} ${styles.navLeft}`}
+                  onClick={() => onNavigate(currentIndex - 1)}
+                  aria-label="Previous card"
+                >
+                  ‹
+                </button>
+              )}
+
+              <div className={styles.cardArea}>
+                <CardDisplay card={card} enableHolo />
+              </div>
+
+              {hasNext && (
+                <button
+                  ref={nextRef}
+                  className={`${styles.navButton} ${styles.navRight}`}
+                  onClick={() => onNavigate(currentIndex + 1)}
+                  aria-label="Next card"
+                >
+                  ›
+                </button>
+              )}
             </div>
 
             <div className={styles.meta}>
@@ -83,6 +166,9 @@ export function CardInspector({ card, onClose }: CardInspectorProps) {
                   <span className={styles.detail}>Power: {card.power}</span>
                 )}
               </div>
+              <span className={styles.counter}>
+                {currentIndex + 1} / {cards.length}
+              </span>
             </div>
           </motion.div>
         </motion.div>

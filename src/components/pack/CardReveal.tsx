@@ -22,10 +22,14 @@ export function CardReveal({
   onRevealCard,
   isSummary,
 }: CardRevealProps) {
-  const [inspectedCard, setInspectedCard] = useState<Card | null>(null);
+  const [inspectedIndex, setInspectedIndex] = useState(-1);
+  const [announcement, setAnnouncement] = useState("");
 
   return (
     <>
+      <div aria-live="polite" className={styles.srOnly}>
+        {announcement}
+      </div>
       <div className={styles.grid}>
         {cards.map((card, i) => {
           const isRevealed = revealedIndices.has(i);
@@ -38,16 +42,21 @@ export function CardReveal({
                 onClick={() => {
                   if (!isRevealed) {
                     onRevealCard(i);
+                    setAnnouncement(`${card.name} - ${card.rarity}`);
                   } else {
-                    setInspectedCard(card);
+                    setInspectedIndex(i);
                   }
                 }}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    if (!isRevealed) onRevealCard(i);
-                    else setInspectedCard(card);
+                    if (!isRevealed) {
+                      onRevealCard(i);
+                      setAnnouncement(`${card.name} - ${card.rarity}`);
+                    } else {
+                      setInspectedIndex(i);
+                    }
                   }
                 }}
                 aria-label={isRevealed ? `Inspect ${card.name}` : "Tap to reveal card"}
@@ -102,8 +111,10 @@ export function CardReveal({
       </div>
 
       <CardInspector
-        card={inspectedCard}
-        onClose={() => setInspectedCard(null)}
+        cards={cards}
+        currentIndex={inspectedIndex}
+        onClose={() => setInspectedIndex(-1)}
+        onNavigate={setInspectedIndex}
       />
     </>
   );

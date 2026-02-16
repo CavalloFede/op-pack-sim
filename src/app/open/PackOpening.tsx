@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useCardData } from "@/hooks/useCardData";
 import { usePackGenerator } from "@/hooks/usePackGenerator";
@@ -13,12 +13,18 @@ export function PackOpening({ setId }: { setId: string }) {
   const router = useRouter();
   const { cards, isLoading, error } = useCardData(setId);
   const { pack, generate, isReady } = usePackGenerator(cards, setId);
+  const [packCount, setPackCount] = useState(1);
 
   useEffect(() => {
     if (isReady && !pack) {
       generate();
     }
   }, [isReady, pack, generate]);
+
+  const handleOpenAnother = useCallback(() => {
+    generate();
+    setPackCount((c) => c + 1);
+  }, [generate]);
 
   if (isLoading) {
     return (
@@ -55,9 +61,10 @@ export function PackOpening({ setId }: { setId: string }) {
           ← Sets
         </Button>
         <span className={styles.setLabel}>{setId}</span>
+        <span className={styles.packCount}>Pack #{packCount}</span>
       </header>
 
-      <PackWrapper pack={pack} onOpenAnother={generate} />
+      <PackWrapper pack={pack} onOpenAnother={handleOpenAnother} />
     </main>
   );
 }

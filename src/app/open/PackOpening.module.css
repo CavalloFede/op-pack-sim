@@ -37,3 +37,9 @@
 .errorText {
   color: var(--accent);
 }
+
+.packCount {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-left: auto;
+}

@@ -3,6 +3,8 @@
 import { useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import type { PackResult, PackState } from "@/lib/types";
+import { Rarity } from "@/lib/types";
+import { RarityBadge } from "@/components/ui/RarityBadge";
 import { PackEnvelope } from "./PackEnvelope";
 import { CardFan } from "./CardFan";
 import { CardReveal } from "./CardReveal";
@@ -80,16 +82,29 @@ export function PackWrapper({ pack, onOpenAnother }: PackWrapperProps) {
                 {state === "revealing" && (
                   <div className={styles.actions}>
                     <Button variant="ghost" size="sm" onClick={handleRevealAll}>
-                      Reveal All
+                      Reveal All ({pack.cards.length - revealedIndices.size} remaining)
                     </Button>
                   </div>
                 )}
                 {state === "summary" && (
-                  <div className={styles.actions}>
-                    <Button size="lg" onClick={handleOpenAnother}>
-                      Open Another Pack
-                    </Button>
-                  </div>
+                  <>
+                    <div className={styles.summary}>
+                      {Object.values(Rarity).map((rarity) => {
+                        const count = pack.cards.filter((c) => c.rarity === rarity).length;
+                        if (count === 0) return null;
+                        return (
+                          <span key={rarity} className={styles.summaryItem}>
+                            <RarityBadge rarity={rarity} /> ×{count}
+                          </span>
+                        );
+                      })}
+                    </div>
+                    <div className={styles.actions}>
+                      <Button size="lg" onClick={handleOpenAnother}>
+                        Open Another Pack
+                      </Button>
+                    </div>
+                  </>
                 )}
               </>
             )}

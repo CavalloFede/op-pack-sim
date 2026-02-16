@@ -26,6 +26,7 @@ export function SetSelector({ sets, onSelect }: SetSelectorProps) {
               height={280}
               className={styles.coverImg}
               unoptimized
+              priority
             />
           </div>
           <span className={styles.setCode}>{set.id}</span>

@@ -15,6 +15,14 @@
   --card-opacity: 1;
 }
 
+/* On touch-only devices, :hover sticks after tap — disable it so
+   the JS hook (gyro or pointer) controls --card-opacity directly */
+@media (hover: none) {
+  .holo-card:hover {
+    --card-opacity: 0;
+  }
+}
+
 .holo-card .card-inner {
   transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
   transition: transform 0.15s ease-out;

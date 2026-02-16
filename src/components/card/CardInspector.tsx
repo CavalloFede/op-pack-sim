@@ -4,6 +4,8 @@ import { useEffect, useCallback, useRef, useState } from "react";
 import type { Card } from "@/lib/types";
 import { CardDisplay } from "./CardDisplay";
 import { RarityBadge } from "@/components/ui/RarityBadge";
+import { GyroPrompt } from "@/components/ui/GyroPrompt";
+import { useDeviceOrientation } from "@/hooks/useDeviceOrientation";
 import styles from "./CardInspector.module.css";
 
 interface CardInspectorProps {
@@ -32,6 +34,9 @@ export function CardInspector({
   const card = isOpen ? cards[currentIndex] : null;
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < cards.length - 1;
+
+  const gyro = useDeviceOrientation({ enabled: isOpen });
+  const useGyro = gyro.isActive || gyro.needsPermission;
 
   // Capture source card rect when opening
   useEffect(() => {
@@ -162,7 +167,12 @@ export function CardInspector({
         className={styles.flyingCard}
         style={getCardStyle()}
       >
-        <CardDisplay card={card} enableHolo />
+        <CardDisplay
+          card={card}
+          enableHolo
+          elementRef={useGyro ? (gyro.ref as React.RefObject<HTMLDivElement>) : undefined}
+          disablePointerTrack={gyro.isActive}
+        />
       </div>
 
       {/* Meta info + nav (fades in after card arrives) */}
@@ -214,6 +224,11 @@ export function CardInspector({
           </span>
         </div>
       </div>
+
+      {/* iOS gyro permission prompt */}
+      {gyro.needsPermission && isVisible && (
+        <GyroPrompt onRequestPermission={gyro.requestPermission} />
+      )}
     </>
   );
 }

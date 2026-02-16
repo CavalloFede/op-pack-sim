@@ -2,6 +2,8 @@ export const API_BASE_URL = "https://optcgapi.com/api";
 
 export const PACK_SIZE = 12;
 
+export const PACK_PRICE = 4.99;
+
 export const CARD_ASPECT_RATIO = 63 / 88; // width / height
 
 export const RARITY_ORDER = ["C", "UC", "R", "L", "SR", "SEC"] as const;

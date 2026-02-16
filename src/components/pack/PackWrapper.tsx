@@ -6,6 +6,7 @@ import type { PackResult, PackState } from "@/lib/types";
 import { Rarity } from "@/lib/types";
 import { RarityBadge } from "@/components/ui/RarityBadge";
 import { useLang } from "@/lib/langContext";
+import { PriceBreakdown } from "./PriceBreakdown";
 import { PackEnvelope } from "./PackEnvelope";
 import { CardFan } from "./CardFan";
 import { CardReveal } from "./CardReveal";
@@ -109,6 +110,7 @@ export function PackWrapper({ pack, onOpenAnother }: PackWrapperProps) {
                         );
                       })}
                     </div>
+                    <PriceBreakdown cards={pack.cards} />
                     <div className={styles.actions}>
                       <Button size="lg" onClick={handleOpenAnother}>
                         Open Another Pack

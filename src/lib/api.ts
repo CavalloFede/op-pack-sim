@@ -20,6 +20,7 @@ interface ApiCard {
   card_type: string;
   card_cost: string | null;
   card_power: string | null;
+  market_price: string | null;
 }
 
 export async function fetchAllSets(): Promise<CardSet[]> {
@@ -68,6 +69,7 @@ export async function fetchSetCards(setId: string): Promise<Card[]> {
       type: c.card_type,
       cost: c.card_cost ?? undefined,
       power: c.card_power ?? undefined,
+      marketPrice: c.market_price ? parseFloat(c.market_price) : undefined,
     };
   });
 }

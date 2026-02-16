@@ -218,6 +218,9 @@ export function CardInspector({
             {card.type && <span className={styles.detail}>{card.type}</span>}
             {card.cost && <span className={styles.detail}>Cost: {card.cost}</span>}
             {card.power && <span className={styles.detail}>Power: {card.power}</span>}
+            {card.marketPrice != null && (
+              <span className={styles.detail}>${card.marketPrice.toFixed(2)}</span>
+            )}
           </div>
           <span className={styles.counter}>
             {currentIndex + 1} / {cards.length}

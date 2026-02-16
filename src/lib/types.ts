@@ -29,6 +29,7 @@ export interface Card {
   type?: string;
   cost?: string;
   power?: string;
+  marketPrice?: number;
 }
 
 export interface CardSet {

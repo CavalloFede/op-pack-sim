@@ -1,0 +1,116 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+}
+
+.cardSlot {
+  position: relative;
+  aspect-ratio: var(--card-aspect);
+}
+
+.flipContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.flipContainer.flipped {
+  transform: rotateY(180deg);
+}
+
+.flipBack,
+.flipFront {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.flipFront {
+  transform: rotateY(180deg);
+}
+
+.cardBack {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    145deg,
+    #1a0a30 0%,
+    #2d1b50 30%,
+    #3d2060 50%,
+    #2d1b50 70%,
+    #1a0a30 100%
+  );
+  border: 2px solid rgba(255, 215, 0, 0.2);
+  border-radius: var(--radius-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardBackPattern {
+  width: 60%;
+  height: 50%;
+  border: 2px solid rgba(255, 215, 0, 0.15);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(230, 57, 70, 0.1) 0%,
+    transparent 70%
+  );
+}
+
+.cardBackText {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: rgba(255, 215, 0, 0.25);
+  letter-spacing: 0.1em;
+}
+
+.cardContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.cardInfo {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  z-index: 2;
+}
+
+.particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+}

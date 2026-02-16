@@ -1,0 +1,52 @@
+.card {
+  position: relative;
+  aspect-ratio: var(--card-aspect);
+  border-radius: var(--radius-card);
+  overflow: visible;
+  cursor: pointer;
+  contain: layout style paint;
+}
+
+.inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+}
+
+.card:hover .inner {
+  transform: scale(1.03) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.skeleton {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-card);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image.loaded {
+  opacity: 1;
+}

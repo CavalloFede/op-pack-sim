@@ -1,0 +1,50 @@
+/* Base holographic system — shared custom properties and 3D perspective */
+
+.holo-card {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+  --card-opacity: 0;
+
+  perspective: 800px;
+  transform-style: preserve-3d;
+}
+
+.holo-card:hover {
+  --card-opacity: 1;
+}
+
+.holo-card .card-inner {
+  transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+}
+
+/* Shared shine layer base */
+.card-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-card);
+  pointer-events: none;
+  opacity: var(--card-opacity);
+  transition: opacity 0.3s ease;
+  z-index: 3;
+}
+
+/* Shared glare layer base */
+.card-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-card);
+  pointer-events: none;
+  opacity: var(--card-opacity);
+  transition: opacity 0.3s ease;
+  z-index: 4;
+  background: radial-gradient(
+    circle at var(--pointer-x) var(--pointer-y),
+    rgba(255, 255, 255, 0.25) 0%,
+    transparent 60%
+  );
+  mix-blend-mode: overlay;
+}

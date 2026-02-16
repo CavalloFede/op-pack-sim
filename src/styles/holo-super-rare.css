@@ -1,0 +1,37 @@
+/* Super Rare (SR) — rainbow holo border + accents with silver glow */
+
+.holo-super-rare .card-shine {
+  background:
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 0, 0, 0.15) 0%,
+      rgba(255, 127, 0, 0.15) 14%,
+      rgba(255, 255, 0, 0.15) 28%,
+      rgba(0, 255, 0, 0.15) 42%,
+      rgba(0, 127, 255, 0.15) 57%,
+      rgba(75, 0, 130, 0.15) 71%,
+      rgba(148, 0, 211, 0.15) 85%,
+      rgba(255, 0, 0, 0.15) 100%
+    );
+  background-size: 300% 300%;
+  background-position: var(--pointer-x) var(--pointer-y);
+  mix-blend-mode: color-dodge;
+  filter: brightness(0.8) contrast(1.2);
+}
+
+.holo-super-rare .card-glare {
+  background:
+    radial-gradient(
+      circle at var(--pointer-x) var(--pointer-y),
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(200, 200, 255, 0.1) 30%,
+      transparent 55%
+    );
+  mix-blend-mode: overlay;
+}
+
+.holo-super-rare {
+  box-shadow:
+    0 0 15px rgba(192, 192, 255, 0.15),
+    0 0 30px rgba(192, 192, 255, 0.08);
+}

@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "./constants";
 import type { Card, CardSet } from "./types";
+import { HoloTier } from "./types";
 import { parseRarity, getHoloTier } from "./rarityConfig";
 
 interface ApiSet {
@@ -54,12 +55,15 @@ export async function fetchSetCards(setId: string): Promise<Card[]> {
 
   return data.map((c) => {
     const rarity = parseRarity(c.rarity);
+    const isParallel = c.card_name.includes("(Parallel)");
+    // Parallel cards get the alt-art holo treatment regardless of base rarity
+    const holoTier = isParallel ? HoloTier.AltArt : getHoloTier(rarity);
     return {
       id: c.card_set_id,
       name: c.card_name,
       cardNumber: c.card_set_id,
       rarity,
-      holoTier: getHoloTier(rarity),
+      holoTier,
       imageUrl: `https://en.onepiece-cardgame.com/images/cardlist/card/${c.card_image_id}.png`,
       set: c.set_id,
       color: c.card_color,

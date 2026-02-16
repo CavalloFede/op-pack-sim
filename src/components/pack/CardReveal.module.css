@@ -16,6 +16,12 @@
 .cardSlot {
   position: relative;
   aspect-ratio: var(--card-aspect);
+  overflow: visible;
+  z-index: 0;
+}
+
+.cardSlot:hover {
+  z-index: 10;
 }
 
 .flipContainer {
@@ -37,7 +43,7 @@
   inset: 0;
   backface-visibility: hidden;
   border-radius: var(--radius-card);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .flipFront {

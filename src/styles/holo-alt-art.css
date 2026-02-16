@@ -36,8 +36,3 @@
   mix-blend-mode: overlay;
 }
 
-.holo-alt-art {
-  box-shadow:
-    0 0 12px rgba(255, 180, 120, 0.15),
-    0 0 25px rgba(200, 160, 255, 0.08);
-}

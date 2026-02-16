@@ -30,8 +30,3 @@
   mix-blend-mode: overlay;
 }
 
-.holo-super-rare {
-  box-shadow:
-    0 0 15px rgba(192, 192, 255, 0.15),
-    0 0 30px rgba(192, 192, 255, 0.08);
-}

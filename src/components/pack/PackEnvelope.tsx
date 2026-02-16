@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import styles from "./PackEnvelope.module.css";
 
@@ -9,7 +10,14 @@ interface PackEnvelopeProps {
   onTear: () => void;
 }
 
+function getPackImageUrl(setId: string): string {
+  const slug = setId.toLowerCase().replace(/-/g, "");
+  return `https://en.onepiece-cardgame.com/images/products/boosters/${slug}/img_thumbnail.png`;
+}
+
 export function PackEnvelope({ setId, isTearing, onTear }: PackEnvelopeProps) {
+  const packUrl = getPackImageUrl(setId);
+
   return (
     <motion.div
       className={styles.container}
@@ -36,12 +44,15 @@ export function PackEnvelope({ setId, isTearing, onTear }: PackEnvelopeProps) {
         aria-label={`Open ${setId} booster pack`}
       >
         <div className={styles.packFace}>
-          <div className={styles.packArt}>
-            <div className={styles.packGlow} />
-            <span className={styles.packTitle}>ONE PIECE</span>
-            <span className={styles.packSet}>{setId}</span>
-            <span className={styles.packLabel}>BOOSTER PACK</span>
-          </div>
+          <Image
+            src={packUrl}
+            alt={`${setId} booster pack`}
+            fill
+            className={styles.packImg}
+            unoptimized
+            priority
+          />
+          <div className={styles.packGlow} />
         </div>
         {isTearing && (
           <>

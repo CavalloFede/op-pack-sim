@@ -1,19 +1,21 @@
 .toggle {
-  display: flex;
+  display: inline-flex;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .option {
-  padding: 6px 14px;
-  font-size: 0.8rem;
+  padding: 5px 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   border: none;
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
   transition: all var(--transition-fast);
+  letter-spacing: 0.03em;
 }
 
 .option:hover {

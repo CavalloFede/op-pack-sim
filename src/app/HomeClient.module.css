@@ -1,19 +1,28 @@
 .main {
   min-height: 100vh;
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 40px 20px 80px;
+  padding: 32px 20px 100px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 28px;
 }
 
 .header {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   background: linear-gradient(135deg, var(--accent), #ff8a80);
@@ -22,22 +31,29 @@
   background-clip: text;
 }
 
+@media (min-width: 640px) {
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
 .subtitle {
-  margin-top: 8px;
-  color: var(--text-secondary);
-  font-size: 1.1rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
 }
 
 .section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .sectionTitle {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .actions {
@@ -45,18 +61,26 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 16px 20px;
-  background: linear-gradient(transparent, var(--bg-primary) 30%);
+  padding: 20px;
+  background: linear-gradient(transparent, var(--bg-primary) 40%);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 20;
 }
 
 @media (min-width: 768px) {
   .actions {
     position: static;
     background: none;
-    padding: 32px 0;
+    padding: 24px 0;
   }
+}
+
+.selectedLabel {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 .error {

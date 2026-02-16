@@ -12,16 +12,21 @@ interface SetSelectorProps {
 export function SetSelector({ sets, selectedId, onSelect }: SetSelectorProps) {
   return (
     <div className={styles.grid}>
-      {sets.map((set) => (
-        <button
-          key={set.id}
-          className={`${styles.card} ${selectedId === set.id ? styles.selected : ""}`}
-          onClick={() => onSelect(set.id)}
-        >
-          <span className={styles.setId}>{set.id}</span>
-          <span className={styles.setName}>{set.name}</span>
-        </button>
-      ))}
+      {sets.map((set) => {
+        const isSelected = selectedId === set.id;
+        return (
+          <button
+            key={set.id}
+            className={`${styles.card} ${isSelected ? styles.selected : ""}`}
+            onClick={() => onSelect(set.id)}
+            aria-pressed={isSelected}
+          >
+            <span className={styles.setCode}>{set.id}</span>
+            <span className={styles.setName}>{set.name}</span>
+            {isSelected && <span className={styles.check}>✓</span>}
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -25,7 +25,6 @@
 }
 
 .card {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -44,20 +43,21 @@
 
 .coverWrap {
   width: 100%;
-  aspect-ratio: 5 / 7;
-  flex-shrink: 0;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
-  transition: filter var(--transition-fast);
+  aspect-ratio: 3 / 4;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: box-shadow var(--transition-fast);
 }
 
 .card:hover .coverWrap {
-  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 8px var(--accent-glow));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 12px var(--accent-glow);
 }
 
 .coverImg {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
 }
 

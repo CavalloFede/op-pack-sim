@@ -25,13 +25,35 @@ interface ApiCard {
   life: string | null;
 }
 
-/** Convert API set_id (e.g. "OP-01") to URL slug (e.g. "op01") */
-function setIdToSlug(setId: string): string {
-  return setId.toLowerCase().replace(/-/g, "");
-}
+const TCGPLAYER_PACK_IDS: Record<string, string> = {
+  "OP-01": "450085",
+  "OP-02": "455865",
+  "OP-03": "477175",
+  "OP-04": "485832",
+  "OP-05": "498733",
+  "OP-06": "515077",
+  "OP-07": "532104",
+  "OP-08": "542502",
+  "OP-09": "563833",
+  "OP-10": "586670",
+  "OP-11": "620179",
+  "OP-12": "628345",
+  "OP-13": "628351",
+  "OP14-EB04": "666577",
+  "EB-01": "521160",
+  "EB-02": "594068",
+  "EB-03": "666727",
+  "PRB-01": "545398",
+  "PRB-02": "628451",
+};
 
 function getPackImageUrl(setId: string): string {
-  const slug = setIdToSlug(setId);
+  const productId = TCGPLAYER_PACK_IDS[setId];
+  if (productId) {
+    return `https://product-images.tcgplayer.com/fit-in/400x400/${productId}.jpg`;
+  }
+  // Fallback to official site thumbnail
+  const slug = setId.toLowerCase().replace(/-/g, "");
   return `https://en.onepiece-cardgame.com/images/products/boosters/${slug}/img_thumbnail.png`;
 }
 

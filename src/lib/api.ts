@@ -60,7 +60,7 @@ export async function fetchSetCards(setId: string): Promise<Card[]> {
       cardNumber: c.card_set_id,
       rarity,
       holoTier: getHoloTier(rarity),
-      imageUrl: c.card_image,
+      imageUrl: `https://en.onepiece-cardgame.com/images/cardlist/card/${c.card_image_id}.png`,
       set: c.set_id,
       color: c.card_color,
       type: c.card_type,

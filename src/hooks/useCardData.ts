@@ -9,7 +9,7 @@ const cardCache = new Map<string, Card[]>();
 function getSessionCache(setId: string): Card[] | null {
   if (typeof window === "undefined") return null;
   try {
-    const raw = sessionStorage.getItem(`cards-${setId}`);
+    const raw = sessionStorage.getItem(`cards-v2-${setId}`);
     if (raw) {
       const parsed = JSON.parse(raw) as Card[];
       cardCache.set(setId, parsed);
@@ -24,7 +24,7 @@ function getSessionCache(setId: string): Card[] | null {
 function setSessionCache(setId: string, cards: Card[]) {
   if (typeof window === "undefined") return;
   try {
-    sessionStorage.setItem(`cards-${setId}`, JSON.stringify(cards));
+    sessionStorage.setItem(`cards-v2-${setId}`, JSON.stringify(cards));
   } catch {
     // storage full, ignore
   }

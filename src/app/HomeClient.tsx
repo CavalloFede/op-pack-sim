@@ -1,23 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { CardSet } from "@/lib/types";
 import { SetSelector } from "@/components/ui/SetSelector";
-import { Button } from "@/components/ui/Button";
 import { LangToggle } from "@/components/ui/LangToggle";
 import styles from "./HomeClient.module.css";
 
 export function HomeClient({ sets }: { sets: CardSet[] }) {
-  const [selectedSet, setSelectedSet] = useState<string | null>(null);
   const router = useRouter();
 
-  const selectedName = sets.find((s) => s.id === selectedSet)?.name;
-
-  const handleOpen = () => {
-    if (selectedSet) {
-      router.push(`/open?set=${selectedSet}`);
-    }
+  const handleSelect = (setId: string) => {
+    router.push(`/open?set=${setId}`);
   };
 
   // Separate booster sets from extra/premium
@@ -47,8 +40,7 @@ export function HomeClient({ sets }: { sets: CardSet[] }) {
         ) : (
           <SetSelector
             sets={boosterSets}
-            selectedId={selectedSet}
-            onSelect={setSelectedSet}
+            onSelect={handleSelect}
           />
         )}
       </section>
@@ -58,24 +50,10 @@ export function HomeClient({ sets }: { sets: CardSet[] }) {
           <h2 className={styles.sectionTitle}>Extra & Premium</h2>
           <SetSelector
             sets={otherSets}
-            selectedId={selectedSet}
-            onSelect={setSelectedSet}
+            onSelect={handleSelect}
           />
         </section>
       )}
-
-      <div className={styles.actions}>
-        <Button
-          size="lg"
-          disabled={!selectedSet}
-          onClick={handleOpen}
-        >
-          {selectedSet ? `Open ${selectedSet} Pack` : "Select a Set"}
-        </Button>
-        {selectedName && (
-          <p className={styles.selectedLabel}>{selectedName}</p>
-        )}
-      </div>
     </main>
   );
 }

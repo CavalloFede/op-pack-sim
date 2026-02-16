@@ -36,10 +36,33 @@ export async function fetchAllSets(): Promise<CardSet[]> {
 
   const data: ApiSet[] = await res.json();
 
-  return data.map((s) => ({
-    id: s.set_id,
-    name: s.set_name,
-  }));
+  // Fetch first leader card from each set to use as cover image
+  const sets = await Promise.all(
+    data.map(async (s) => {
+      let coverImageId: string | undefined;
+      try {
+        const setRes = await fetch(`${API_BASE_URL}/sets/${s.set_id}/`, {
+          next: { revalidate: 86400 },
+        });
+        if (setRes.ok) {
+          const cards: ApiCard[] = await setRes.json();
+          const leader = cards.find((c) => c.rarity === "L");
+          if (leader) {
+            coverImageId = leader.card_image_id;
+          }
+        }
+      } catch {
+        // Fallback: no cover image
+      }
+      return {
+        id: s.set_id,
+        name: s.set_name,
+        coverImageId,
+      };
+    })
+  );
+
+  return sets;
 }
 
 export async function fetchSetCards(setId: string): Promise<Card[]> {

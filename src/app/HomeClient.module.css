@@ -2,7 +2,7 @@
   min-height: 100vh;
   max-width: 960px;
   margin: 0 auto;
-  padding: 32px 20px 100px;
+  padding: 32px 20px 60px;
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -54,33 +54,6 @@
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-}
-
-.actions {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 20px;
-  background: linear-gradient(transparent, var(--bg-primary) 40%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  z-index: 20;
-}
-
-@media (min-width: 768px) {
-  .actions {
-    position: static;
-    background: none;
-    padding: 24px 0;
-  }
-}
-
-.selectedLabel {
-  font-size: 0.8rem;
-  color: var(--text-muted);
 }
 
 .error {

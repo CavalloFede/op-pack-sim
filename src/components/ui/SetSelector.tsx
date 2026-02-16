@@ -22,8 +22,8 @@ export function SetSelector({ sets, onSelect }: SetSelectorProps) {
             <Image
               src={set.packImage}
               alt={`${set.name} booster pack`}
-              width={140}
-              height={196}
+              width={200}
+              height={280}
               className={styles.coverImg}
               unoptimized
             />

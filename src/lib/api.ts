@@ -25,6 +25,16 @@ interface ApiCard {
   life: string | null;
 }
 
+/** Convert API set_id (e.g. "OP-01") to URL slug (e.g. "op01") */
+function setIdToSlug(setId: string): string {
+  return setId.toLowerCase().replace(/-/g, "");
+}
+
+function getPackImageUrl(setId: string): string {
+  const slug = setIdToSlug(setId);
+  return `https://en.onepiece-cardgame.com/images/products/boosters/${slug}/img_thumbnail.png`;
+}
+
 export async function fetchAllSets(): Promise<CardSet[]> {
   const res = await fetch(`${API_BASE_URL}/allSets/`, {
     next: { revalidate: 3600 },
@@ -36,33 +46,11 @@ export async function fetchAllSets(): Promise<CardSet[]> {
 
   const data: ApiSet[] = await res.json();
 
-  // Fetch first leader card from each set to use as cover image
-  const sets = await Promise.all(
-    data.map(async (s) => {
-      let coverImageId: string | undefined;
-      try {
-        const setRes = await fetch(`${API_BASE_URL}/sets/${s.set_id}/`, {
-          next: { revalidate: 86400 },
-        });
-        if (setRes.ok) {
-          const cards: ApiCard[] = await setRes.json();
-          const leader = cards.find((c) => c.rarity === "L");
-          if (leader) {
-            coverImageId = leader.card_image_id;
-          }
-        }
-      } catch {
-        // Fallback: no cover image
-      }
-      return {
-        id: s.set_id,
-        name: s.set_name,
-        coverImageId,
-      };
-    })
-  );
-
-  return sets;
+  return data.map((s) => ({
+    id: s.set_id,
+    name: s.set_name,
+    packImage: getPackImageUrl(s.set_id),
+  }));
 }
 
 export async function fetchSetCards(setId: string): Promise<Card[]> {

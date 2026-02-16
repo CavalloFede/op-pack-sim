@@ -35,7 +35,7 @@ export interface Card {
 export interface CardSet {
   id: string;
   name: string;
-  coverImageId?: string;
+  packImage: string;
 }
 
 export interface PackResult {

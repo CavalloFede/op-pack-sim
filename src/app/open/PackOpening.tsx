@@ -7,6 +7,7 @@ import { usePackGenerator } from "@/hooks/usePackGenerator";
 import { PackWrapper } from "@/components/pack/PackWrapper";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Button } from "@/components/ui/Button";
+import { LangToggle } from "@/components/ui/LangToggle";
 import styles from "./PackOpening.module.css";
 
 export function PackOpening({ setId }: { setId: string }) {
@@ -61,6 +62,7 @@ export function PackOpening({ setId }: { setId: string }) {
           ← Sets
         </Button>
         <span className={styles.setLabel}>{setId}</span>
+        <LangToggle />
         <span className={styles.packCount}>Pack #{packCount}</span>
       </header>
 

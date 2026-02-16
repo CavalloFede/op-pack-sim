@@ -1,0 +1,279 @@
+.cardBack {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+/* ── Blue variant (regular cards) ── */
+.blue {
+  background: linear-gradient(
+    160deg,
+    #0a1628 0%,
+    #0f2440 20%,
+    #1a3a5c 50%,
+    #0f2440 80%,
+    #0a1628 100%
+  );
+  box-shadow:
+    inset 0 0 60px rgba(20, 80, 160, 0.3),
+    inset 0 0 120px rgba(10, 40, 80, 0.2);
+}
+
+/* ── Red variant (leader cards) ── */
+.red {
+  background: linear-gradient(
+    160deg,
+    #2a0a0a 0%,
+    #401010 20%,
+    #5c1a1a 50%,
+    #401010 80%,
+    #2a0a0a 100%
+  );
+  box-shadow:
+    inset 0 0 60px rgba(160, 30, 30, 0.3),
+    inset 0 0 120px rgba(80, 15, 15, 0.2);
+}
+
+/* ── Outer ornate border ── */
+.border {
+  position: absolute;
+  inset: 4px;
+  border: 1.5px solid rgba(255, 215, 0, 0.18);
+  border-radius: calc(var(--radius-card) - 2px);
+  pointer-events: none;
+}
+
+/* ── Inner ornate border ── */
+.borderInner {
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  border-radius: calc(var(--radius-card) - 4px);
+  pointer-events: none;
+}
+
+/* ── Corner flourishes ── */
+.corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.corner::before,
+.corner::after {
+  content: "";
+  position: absolute;
+  background: rgba(255, 215, 0, 0.3);
+}
+
+.corner::before {
+  width: 100%;
+  height: 1.5px;
+}
+
+.corner::after {
+  width: 1.5px;
+  height: 100%;
+}
+
+.cornerTL {
+  top: 12px;
+  left: 12px;
+}
+
+.cornerTL::before { top: 0; left: 0; }
+.cornerTL::after { top: 0; left: 0; }
+
+.cornerTR {
+  top: 12px;
+  right: 12px;
+}
+
+.cornerTR::before { top: 0; right: 0; }
+.cornerTR::after { top: 0; right: 0; }
+
+.cornerBL {
+  bottom: 12px;
+  left: 12px;
+}
+
+.cornerBL::before { bottom: 0; left: 0; }
+.cornerBL::after { bottom: 0; left: 0; }
+
+.cornerBR {
+  bottom: 12px;
+  right: 12px;
+}
+
+.cornerBR::before { bottom: 0; right: 0; }
+.cornerBR::after { bottom: 0; right: 0; }
+
+/* ── Repeating background pattern (subtle crossbones grid) ── */
+.pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 215, 0, 0.5) 10px,
+      rgba(255, 215, 0, 0.5) 11px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 215, 0, 0.5) 10px,
+      rgba(255, 215, 0, 0.5) 11px
+    );
+  pointer-events: none;
+}
+
+/* ── Central diamond / rhombus ── */
+.diamond {
+  position: relative;
+  width: 52%;
+  height: 48%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.diamond::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(255, 215, 0, 0.25);
+  transform: rotate(45deg);
+  border-radius: 4px;
+}
+
+/* ── Radial glow behind diamond ── */
+.glowBlue {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(30, 100, 200, 0.15) 0%,
+    rgba(20, 60, 120, 0.08) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glowRed {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(200, 40, 40, 0.15) 0%,
+    rgba(120, 20, 20, 0.08) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Skull / crossbones motif (CSS-only) ── */
+.skull {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.skull::before {
+  content: "☠";
+  position: absolute;
+  font-size: 28px;
+  color: rgba(255, 215, 0, 1);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ── Text labels ── */
+.textGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  z-index: 2;
+  position: relative;
+}
+
+.title {
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  color: rgba(255, 215, 0, 0.45);
+  text-transform: uppercase;
+  line-height: 1;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.15);
+}
+
+.subtitle {
+  font-size: 0.38rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: rgba(255, 215, 0, 0.3);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* ── Horizontal decorative lines flanking text ── */
+.divider {
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 215, 0, 0.3) 30%,
+    rgba(255, 215, 0, 0.3) 70%,
+    transparent 100%
+  );
+  margin: 3px 0;
+}
+
+/* ── Top & bottom edge accents ── */
+.edgeAccentTop,
+.edgeAccentBottom {
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 215, 0, 0.15) 30%,
+    rgba(255, 215, 0, 0.2) 50%,
+    rgba(255, 215, 0, 0.15) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.edgeAccentTop {
+  top: 18px;
+}
+
+.edgeAccentBottom {
+  bottom: 18px;
+}

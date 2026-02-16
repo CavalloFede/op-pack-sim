@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { LangProvider } from "@/lib/langContext";
 import "./globals.css";
 import "@/styles/holo-base.css";
 import "@/styles/holo-rare.css";
@@ -27,7 +28,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={geist.variable}>{children}</body>
+      <body className={geist.variable}>
+          <LangProvider>{children}</LangProvider>
+        </body>
     </html>
   );
 }

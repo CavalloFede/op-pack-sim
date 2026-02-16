@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Card } from "@/lib/types";
 import { HoloTier } from "@/lib/types";
 import { usePointerTrack } from "@/hooks/usePointerTrack";
+import { useLang } from "@/lib/langContext";
 import styles from "./CardDisplay.module.css";
 
 interface CardDisplayProps {
@@ -15,6 +16,7 @@ interface CardDisplayProps {
 export function CardDisplay({ card, onClick, enableHolo = true }: CardDisplayProps) {
   const [loaded, setLoaded] = useState(false);
   const { onPointerMove, onPointerLeave } = usePointerTrack();
+  const { getImageUrl } = useLang();
 
   const hasHolo = enableHolo && card.holoTier !== HoloTier.None;
   const holoClass = hasHolo ? `holo-${card.holoTier}` : "";
@@ -33,7 +35,7 @@ export function CardDisplay({ card, onClick, enableHolo = true }: CardDisplayPro
         <div className={styles.imageWrapper}>
           {!loaded && <div className={styles.skeleton} />}
           <img
-            src={card.imageUrl}
+            src={getImageUrl(card.imageUrl)}
             alt={card.name}
             className={`${styles.image} ${loaded ? styles.loaded : ""}`}
             onLoad={() => setLoaded(true)}

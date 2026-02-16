@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import type { Card } from "@/lib/types";
-import { HoloTier } from "@/lib/types";
+import { HoloTier, Rarity } from "@/lib/types";
 import { CardDisplay } from "@/components/card/CardDisplay";
 import { CardInspector } from "@/components/card/CardInspector";
+import { CardBack } from "@/components/card/CardBack";
 import { RarityBadge } from "@/components/ui/RarityBadge";
 import styles from "./CardReveal.module.css";
 
@@ -62,11 +63,7 @@ export function CardReveal({
                 aria-label={isRevealed ? `Inspect ${card.name}` : "Tap to reveal card"}
               >
                 <div className={styles.flipBack}>
-                  <div className={styles.cardBack}>
-                    <div className={styles.cardBackPattern}>
-                      <span className={styles.cardBackText}>OP</span>
-                    </div>
-                  </div>
+                  <CardBack variant={card.rarity === Rarity.Leader ? "red" : "blue"} />
                 </div>
                 <div className={styles.flipFront}>
                   {isRevealed && (

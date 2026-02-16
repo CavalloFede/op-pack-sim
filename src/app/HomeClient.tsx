@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { CardSet } from "@/lib/types";
 import { SetSelector } from "@/components/ui/SetSelector";
 import { Button } from "@/components/ui/Button";
+import { LangToggle } from "@/components/ui/LangToggle";
 import styles from "./HomeClient.module.css";
 
 export function HomeClient({ sets }: { sets: CardSet[] }) {
@@ -24,6 +25,7 @@ export function HomeClient({ sets }: { sets: CardSet[] }) {
         <p className={styles.subtitle}>
           Open One Piece TCG booster packs with holographic card effects
         </p>
+        <LangToggle />
       </header>
 
       <section className={styles.section}>

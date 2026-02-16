@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import type { Card } from "@/lib/types";
+import { Rarity } from "@/lib/types";
+import { CardBack } from "@/components/card/CardBack";
 import styles from "./CardFan.module.css";
 
 interface CardFanProps {
@@ -31,11 +33,7 @@ export function CardFan({ cards, onFanComplete }: CardFanProps) {
             delay: i * 0.06,
           }}
         >
-          <div className={styles.cardBack}>
-            <div className={styles.cardBackPattern}>
-              <span className={styles.cardBackText}>OP</span>
-            </div>
-          </div>
+          <CardBack variant={card.rarity === Rarity.Leader ? "red" : "blue"} />
         </motion.div>
       ))}
     </div>
